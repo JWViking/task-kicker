@@ -1,3 +1,5 @@
+var taskIdCounter=0;
+
 //These create a variable that connects to specific parts of the html (the button and the ul)
 var formEl = document.querySelector("#task-form"); 
 var tasksToDoEl = document.querySelector("#tasks-to-do"); 
@@ -12,10 +14,10 @@ var taskFormHandler = function (event) {
   //check if input values are empty strings
   if(!taskNameInput || !taskTypeInput) {
     alert("You need to fill out the task form!")
-    feturnfalse;
+    returnfalse;
   }
 
-  formEl.requestFullscreen();
+  formEl.reset();
 
   // package up data as an object
   var taskDataObj = {
@@ -32,6 +34,9 @@ var createTaskEl = function (taskDataObj) {
   var listItemEl = document.createElement("li");
   listItemEl.className = "task-item";
 
+  //add task id as a custom attribute
+  listItemEl.setAttribute("data-task-id", taskIdCounter);
+
   // create div to hold task info and add to list item
   var taskInfoEl = document.createElement("div");
   taskInfoEl.className = "task-info";
@@ -40,6 +45,32 @@ var createTaskEl = function (taskDataObj) {
 
   // add entire list item to list
   tasksToDoEl.appendChild(listItemEl);
+
+  //increment counter by one each time a task is created
+  taskIdCounter++
+};
+
+var createTaskActions = function(taskId) {
+  var actionContainerEl = document.createElement("div");
+  actionContainerEl.className = "task-actions";
+
+ // create edit button
+var editButtonEl = document.createElement("button");
+editButtonEl.textContent = "Edit";
+editButtonEl.className = "btn edit-btn";
+editButtonEl.setAttribute("data-task-id", taskId);
+
+actionContainerEl.appendChild(editButtonEl);
+
+// create delete button
+var deleteButtonEl = document.createElement("button");
+deleteButtonEl.textContent = "Delete";
+deleteButtonEl.className = "btn delete-btn";
+deleteButtonEl.setAttribute("data-task-id", taskId);
+
+actionContainerEl.appendChild(deleteButtonEl);
+
+return actionContainerEl;
 };
 
 formEl.addEventListener("submit", taskFormHandler);
